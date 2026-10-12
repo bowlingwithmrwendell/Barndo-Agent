@@ -3,28 +3,138 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Barndo Build Assistant: widget preview</title>
+<title>BarndoBible Assistant Preview</title>
 <style>
-  body { margin: 0; font-family: "Helvetica Neue", Arial, sans-serif; color: #16283F; background: #fff; }
-  .bar { background: #16283F; color: #fff; padding: 18px 24px; font-weight: 700; }
-  main { max-width: 760px; margin: 0 auto; padding: 32px 20px 120px; line-height: 1.6; }
-  h1 { font-size: 30px; line-height: 1.2; }
-  code { background: #F4FBFA; border: 1px solid #D3E5E2; padding: 2px 6px; border-radius: 4px; }
-  pre { background: #F4FBFA; border: 1px solid #D3E5E2; padding: 14px; border-radius: 8px; overflow-x: auto; }
+  :root { --navy:#16283F; --teal:#1FA79B; --teal-ink:#0E7A70; --mist:#F4FBFA; --rule:#D3E5E2; --ink:#2b3a4c; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; color: var(--navy); background: #fff; line-height: 1.6; }
+  a { color: var(--teal-ink); }
+  .preview-flag { background: var(--teal); color: #fff; font-size: 13px; text-align: center; padding: 6px 12px; }
+
+  header.site { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 14px 32px; border-bottom: 1px solid var(--rule); background: #fff; }
+  header.site img { height: 46px; width: auto; display: block; }
+  header.site nav { display: flex; gap: 26px; font-size: 15px; font-weight: 600; }
+  header.site nav a { color: var(--navy); text-decoration: none; }
+  header.site nav a:hover { color: var(--teal); }
+
+  .hero { position: relative; min-height: 520px; display: flex; align-items: flex-end; color: #fff;
+          background: var(--navy) url("https://barndobible.com/wp-content/uploads/2026/09/barndominium-cost-social-card-1200x630-1.jpg") center 55% / cover no-repeat; }
+  .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(22,40,63,.88) 0%, rgba(22,40,63,.55) 45%, rgba(22,40,63,.05) 80%); }
+  .hero .inner { position: relative; max-width: 1120px; width: 100%; margin: 0 auto; padding: 0 32px 72px; }
+  .hero h1 { font-size: clamp(34px, 5vw, 56px); line-height: 1.08; margin: 0 0 16px; max-width: 13em; letter-spacing: -0.01em; }
+  .hero p { font-size: 19px; max-width: 32em; margin: 0 0 28px; color: #e6eef3; }
+  .hero .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn { display: inline-block; padding: 13px 22px; border-radius: 6px; font-weight: 700; text-decoration: none; font-size: 16px; }
+  .btn.primary { background: var(--teal); color: #fff; }
+  .btn.primary:hover { background: #17897f; }
+  .btn.ghost { border: 2px solid rgba(255,255,255,.8); color: #fff; }
+  .btn.ghost:hover { background: rgba(255,255,255,.12); }
+
+  section.guides { max-width: 1120px; margin: 0 auto; padding: 64px 32px 24px; }
+  section.guides h2 { font-size: 30px; margin: 0 0 6px; }
+  section.guides > p { margin: 0 0 28px; color: var(--ink); max-width: 40em; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card { text-decoration: none; color: inherit; display: block; }
+  .card img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; display: block; background: var(--mist); }
+  .card h3 { margin: 14px 0 4px; font-size: 19px; }
+  .card p { margin: 0; color: var(--ink); font-size: 15px; }
+  .card:hover h3 { color: var(--teal-ink); }
+
+  section.how { background: var(--mist); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin-top: 56px; }
+  section.how .inner { max-width: 1120px; margin: 0 auto; padding: 48px 32px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
+  section.how h2 { font-size: 26px; margin: 0 0 10px; }
+  section.how p { margin: 0 0 10px; color: var(--ink); }
+  section.how pre { background: #fff; border: 1px solid var(--rule); border-radius: 8px; padding: 14px; overflow-x: auto; font-size: 13px; margin: 0; }
+  section.how details { margin-top: 12px; font-size: 14px; color: var(--ink); }
+
+  footer { text-align: center; font-size: 13px; color: #56677a; padding: 28px 16px 110px; }
+
+  @media (max-width: 860px) {
+    header.site { padding: 12px 16px; } header.site nav { display: none; }
+    .hero { min-height: 440px; } .hero .inner { padding: 56px 16px 48px; }
+    .hero::before { background: linear-gradient(180deg, rgba(22,40,63,.2) 0%, rgba(22,40,63,.9) 70%); }
+    section.guides { padding: 44px 16px 8px; } .cards { grid-template-columns: 1fr; }
+    section.how .inner { grid-template-columns: 1fr; padding: 36px 16px; }
+  }
 </style>
 </head>
 <body>
-<div class="bar">BarndoBible (preview page)</div>
-<main>
-  <h1>Widget preview</h1>
-  <p>This page stands in for barndobible.com. The floating <strong>Ask BarndoBible</strong> button sits in the
-     bottom-right corner.</p>
-  <p>To add the floating button to every page of the site, paste this into WPCode as a site-wide footer snippet:</p>
-  <pre><code>&lt;script src="https://api.barndobible.com/widget/barndo-agent.js" defer&gt;&lt;/script&gt;</code></pre>
-  <p>To place the widget inside a page instead (for example on a tools page, opened on the estimator), add a
-     Custom HTML block with <code>&lt;div id="barndo-estimator"&gt;&lt;/div&gt;</code> and load the script with
-     <code>data-inline="#barndo-estimator" data-tab="estimate"</code>.</p>
-</main>
+<div class="preview-flag">Local preview of the BarndoBible assistant. Nothing on this page is live on barndobible.com yet.</div>
+
+<header class="site">
+  <a href="https://barndobible.com/"><img src="https://barndobible.com/wp-content/uploads/2026/05/cropped-barndobible_logo_file.png" alt="BarndoBible"></a>
+  <nav aria-label="Site">
+    <a href="https://barndobible.com/start-here/">Start Here</a>
+    <a href="https://barndobible.com/barndominium-cost-guides/">Cost Guides</a>
+    <a href="https://barndobible.com/barndominium-plans/">Plans &amp; Kits</a>
+    <a href="https://barndobible.com/diy-barndominium-build-guides/">DIY Build Guides</a>
+    <a href="https://barndobible.com/barndominium-cost-calculator/">Tools</a>
+  </nav>
+</header>
+
+<section class="hero" aria-label="Black board-and-batten barndominium at dusk">
+  <div class="inner">
+    <h1>Plan, budget and build your barndominium</h1>
+    <p>Real cost breakdowns, floor plans and step-by-step owner-builder guides. Now with an assistant that answers your questions from all of them.</p>
+    <div class="cta">
+      <a class="btn primary" href="#" id="open-assistant">Ask the assistant</a>
+      <a class="btn ghost" href="#" id="open-estimator">Estimate materials</a>
+    </div>
+  </div>
+</section>
+
+<section class="guides">
+  <h2>Start with the guides</h2>
+  <p>Every answer the assistant gives comes from these guides and links back to the page it used.</p>
+  <div class="cards">
+    <a class="card" href="https://barndobible.com/barndominium-cost-guides/">
+      <img src="https://barndobible.com/wp-content/uploads/2026/09/Barndominium-Cost-Guides.jpg" alt="Barndominium cost guides" loading="lazy">
+      <h3>Cost Guides</h3>
+      <p>What a barndo really costs by size, state and build phase, from slab to finish-out.</p>
+    </a>
+    <a class="card" href="https://barndobible.com/barndominium-plans/">
+      <img src="https://barndobible.com/wp-content/uploads/2026/09/Best-40×60-Barndominium-Plans-With-a-Shop.jpg" alt="Black 40 by 60 barndominium with an attached workshop at dusk" loading="lazy">
+      <h3>Plans &amp; Kits</h3>
+      <p>Layouts that work for real life, plus how to compare steel building kits.</p>
+    </a>
+    <a class="card" href="https://barndobible.com/diy-barndominium-build-guides/">
+      <img src="https://barndobible.com/wp-content/uploads/2026/09/DIY-Barndominium-Build-Guides.jpg" alt="DIY barndominium build guides" loading="lazy">
+      <h3>DIY Build Guides</h3>
+      <p>Rough-in, insulation, framing and finish-out, in the order the trades actually work.</p>
+    </a>
+  </div>
+</section>
+
+<section class="how">
+  <div class="inner">
+    <div>
+      <h2>Putting it on barndobible.com</h2>
+      <p>Add one line to WPCode as a site-wide footer snippet and the <strong>Ask BarndoBible</strong> button appears on every page.</p>
+      <details>
+        <summary>Placing it inside a page instead</summary>
+        <p>Add a Custom HTML block with <code>&lt;div id="barndo-estimator"&gt;&lt;/div&gt;</code> and add
+           <code>data-inline="#barndo-estimator" data-tab="estimate"</code> to the script tag on that page.</p>
+      </details>
+    </div>
+    <pre><code>&lt;script src="https://api.barndobible.com/widget/barndo-agent.js" defer&gt;&lt;/script&gt;</code></pre>
+  </div>
+</section>
+
+<footer>BarndoBible preview build</footer>
+
 <script src="barndo-agent.js" defer></script>
+<script>
+  // Hero buttons open the floating assistant on the matching tab.
+  function openAssistant(tab) {
+    var host = document.getElementById("barndo-agent");
+    if (!host || !host.shadowRoot) return;
+    var r = host.shadowRoot, launch = r.querySelector(".launch");
+    if (launch && launch.getAttribute("aria-expanded") !== "true") launch.click();
+    var tabs = r.querySelectorAll(".tab");
+    if (tabs.length === 2) tabs[tab === "estimate" ? 1 : 0].click();
+  }
+  document.getElementById("open-assistant").addEventListener("click", function (e) { e.preventDefault(); openAssistant("ask"); });
+  document.getElementById("open-estimator").addEventListener("click", function (e) { e.preventDefault(); openAssistant("estimate"); });
+</script>
 </body>
 </html>

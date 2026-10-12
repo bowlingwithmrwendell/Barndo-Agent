@@ -17,6 +17,12 @@
   var INLINE = script && script.getAttribute("data-inline");
   var STORE_KEY = "barndo-agent-chat-v1";
 
+  // Brand images, served from barndobible.com's own media library.
+  var IMG = {
+    avatar: "https://barndobible.com/wp-content/uploads/2026/09/BarndoBible.com-Avatar-Round.png",
+    welcome: "https://barndobible.com/wp-content/uploads/2026/09/Barndominium-with-shop.jpg"
+  };
+
   var STARTERS = [
     "What does a 40x60 barndominium cost to build?",
     "When does spray foam go in relative to electrical rough-in?",
@@ -28,7 +34,7 @@
     "*{box-sizing:border-box;font-family:inherit}",
     "button,input,select,textarea{font:inherit;color:inherit}",
     ":focus-visible{outline:3px solid var(--teal);outline-offset:2px}",
-    ".launch{position:fixed;right:20px;bottom:20px;z-index:2147483000;display:flex;align-items:center;gap:10px;padding:12px 18px 12px 14px;border:0;border-radius:999px;background:var(--navy);color:var(--white);font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 6px 20px rgba(22,40,63,.28)}",
+    ".launch{position:fixed;right:20px;bottom:20px;z-index:2147483000;display:flex;align-items:center;gap:10px;padding:8px 18px 8px 8px;border:0;border-radius:999px;background:var(--navy);color:var(--white);font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 6px 20px rgba(22,40,63,.28)}",
     ".launch:hover{background:#1d3452}",
     ".launch svg{flex:none}",
     ".panel{position:fixed;right:20px;bottom:84px;z-index:2147483000;width:392px;height:min(640px,calc(100vh - 110px));display:flex;flex-direction:column;background:var(--mist);border:1px solid var(--rule);border-radius:10px;overflow:hidden;box-shadow:0 18px 48px rgba(22,40,63,.25)}",
@@ -38,6 +44,12 @@
     "header{background:var(--navy);color:var(--white);padding:14px 16px 0}",
     ".top{display:flex;align-items:center;justify-content:space-between;gap:8px}",
     ".title{font-size:16px;font-weight:700;margin:0}",
+    ".who{display:flex;align-items:center;gap:10px}",
+    ".avatar{width:38px;height:38px;border-radius:50%;flex:none;background:var(--teal) center/cover no-repeat;border:2px solid rgba(255,255,255,.85)}",
+    ".launch .avatar{width:30px;height:30px;border-width:1.5px}",
+    ".hero{position:relative;margin:-16px -16px 14px;height:150px;background:var(--navy) center 60%/cover no-repeat}",
+    ".hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(22,40,63,0) 35%,rgba(22,40,63,.85) 100%)}",
+    ".hero span{position:absolute;left:16px;right:16px;bottom:12px;z-index:1;color:#fff;font-weight:700;font-size:17px;line-height:1.25}",
     ".sub{font-size:12.5px;opacity:.8;margin:2px 0 0}",
     ".close{border:0;background:transparent;color:var(--white);width:34px;height:34px;border-radius:6px;cursor:pointer;font-size:22px;line-height:1}",
     ".close:hover{background:rgba(255,255,255,.12)}",
@@ -54,7 +66,7 @@
     ".msg.err{border-left-color:#B4432F;color:#7a2a1c}",
     ".srcs{margin-top:8px;font-size:12.5px;color:#4a5b6e}.srcs a{color:var(--teal-ink)}",
     ".empty{padding:4px 0}",
-    ".empty h3{font-size:15px;margin:0 0 6px}.empty p{margin:0 0 12px;color:#3d4f63}",
+    ".empty h3{font-size:15px;margin:0 0 6px}.empty .hero+p{margin-top:0}.empty p{margin:0 0 12px;color:#3d4f63}",
     ".starter{display:block;width:100%;text-align:left;margin:0 0 8px;padding:10px 12px;background:var(--white);border:1px solid var(--rule);border-radius:8px;cursor:pointer;font-size:14px;color:var(--navy)}",
     ".starter:hover{border-color:var(--teal)}",
     ".typing{color:#4a5b6e;font-size:13.5px;padding-left:15px}",
@@ -165,7 +177,14 @@
   root.appendChild(wrap);
 
   var roof = '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg>';
-  var launch = el("button", { class: "launch", type: "button", "aria-expanded": "false", "aria-controls": "ba-panel", html: roof + "<span>Ask BarndoBible</span>" });
+  var launch = el("button", { class: "launch", type: "button", "aria-expanded": "false", "aria-controls": "ba-panel", html: '<span class="avatar" aria-hidden="true"></span><span>Ask BarndoBible</span>' });
+  // Show the BarndoBible avatar; if it can't load, fall back to the roofline icon.
+  (function () {
+    var test = new Image();
+    test.onload = function () { root.querySelectorAll(".avatar").forEach(function (a) { a.style.backgroundImage = "url(" + IMG.avatar + ")"; }); };
+    test.onerror = function () { var a = launch.querySelector(".avatar"); if (a) a.outerHTML = roof; };
+    test.src = IMG.avatar;
+  })();
 
   var panel = el("section", { class: "panel", id: "ba-panel", role: "dialog", "aria-label": "Barndo Build Assistant" });
   if (!INLINE) panel.hidden = true;
@@ -175,7 +194,8 @@
   var tabEst = el("button", { class: "tab", type: "button", role: "tab", "aria-selected": "false", text: "Estimate materials" });
   var header = el("header", null, [
     el("div", { class: "top" }, [
-      el("div", null, [el("p", { class: "title", text: "Barndo Build Assistant" }), el("p", { class: "sub", text: "Answers from the BarndoBible guides" })]),
+      el("div", { class: "who" }, [el("span", { class: "avatar", "aria-hidden": "true" }),
+        el("div", null, [el("p", { class: "title", text: "Barndo Build Assistant" }), el("p", { class: "sub", text: "Answers from the BarndoBible guides" })])]),
       INLINE ? null : closeBtn
     ]),
     el("div", { class: "tabs", role: "tablist" }, [tabAsk, tabEst])
@@ -256,8 +276,10 @@
   }
   function renderEmpty() {
     log.innerHTML = "";
+    var hero = el("div", { class: "hero", role: "img", "aria-label": "Finished barndominium with an attached shop at dusk" }, [el("span", { text: "Planning a barndo or a home build?" })]);
+    hero.style.backgroundImage = "url(" + IMG.welcome + ")";
     var box = el("div", { class: "empty" }, [
-      el("h3", { text: "Planning a barndo or a home build?" }),
+      hero,
       el("p", { text: "Ask anything about costs, floor plans, kits, land, rough-in or finish-out. Answers draw on BarndoBible's guides." })
     ]);
     STARTERS.forEach(function (q) { box.appendChild(el("button", { class: "starter", type: "button", text: q, onclick: function () { ask(q); } })); });
