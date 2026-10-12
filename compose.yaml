@@ -1,0 +1,17 @@
+services:
+  api:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - path: ./backend/.env
+        required: true
+    environment:
+      DATABASE_URL: sqlite:////app/data/barndo.db
+      STORAGE_LOCAL_ROOT: /app/data/storage
+    volumes:
+      - api-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  api-data:
