@@ -6,6 +6,10 @@ target-version = "py312"
 select = ["E", "F", "I", "B", "UP"]
 ignore = ["B008"]  # FastAPI Depends() in defaults is idiomatic
 
+[tool.ruff.lint.per-file-ignores]
+"tests/wp_fixtures.py" = ["E501"]  # sample HTML
+"app/agent/service.py" = ["E501"]  # prompt text
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 filterwarnings = ["ignore::DeprecationWarning"]

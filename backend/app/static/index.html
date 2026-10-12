@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barndo Build Assistant: widget preview</title>
+<style>
+  body { margin: 0; font-family: "Helvetica Neue", Arial, sans-serif; color: #16283F; background: #fff; }
+  .bar { background: #16283F; color: #fff; padding: 18px 24px; font-weight: 700; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 20px 120px; line-height: 1.6; }
+  h1 { font-size: 30px; line-height: 1.2; }
+  code { background: #F4FBFA; border: 1px solid #D3E5E2; padding: 2px 6px; border-radius: 4px; }
+  pre { background: #F4FBFA; border: 1px solid #D3E5E2; padding: 14px; border-radius: 8px; overflow-x: auto; }
+</style>
+</head>
+<body>
+<div class="bar">BarndoBible (preview page)</div>
+<main>
+  <h1>Widget preview</h1>
+  <p>This page stands in for barndobible.com. The floating <strong>Ask BarndoBible</strong> button sits in the
+     bottom-right corner.</p>
+  <p>To add the floating button to every page of the site, paste this into WPCode as a site-wide footer snippet:</p>
+  <pre><code>&lt;script src="https://api.barndobible.com/widget/barndo-agent.js" defer&gt;&lt;/script&gt;</code></pre>
+  <p>To place the widget inside a page instead (for example on a tools page, opened on the estimator), add a
+     Custom HTML block with <code>&lt;div id="barndo-estimator"&gt;&lt;/div&gt;</code> and load the script with
+     <code>data-inline="#barndo-estimator" data-tab="estimate"</code>.</p>
+</main>
+<script src="barndo-agent.js" defer></script>
+</body>
+</html>
