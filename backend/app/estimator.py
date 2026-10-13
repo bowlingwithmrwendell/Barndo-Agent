@@ -82,6 +82,10 @@ def estimate(inp: EstimateInput) -> EstimateResult:
     roof_area_inside = 2 * rafter * L  # underside of roof deck, for foam
 
     a: list[str] = [
+        "Preliminary budget quantities only, not an engineered design or an order list. "
+        "Verify quantities against project plans and supplier specifications before ordering.",
+        "Slab, grade beam, reinforcement and foam thickness values are generic assumptions, "
+        "not recommendations for your site. Confirm them with your design professional and installer.",
         f"Gable roof: rise {rise:.2f} ft over a {run:g} ft run at {P:g}/12; slope length {rafter:.2f} ft per side.",
         f"Overhang {oh:g} ft at eaves and gables; panel coverage {inp.panel_coverage_in:g} in (PBR/R-panel style).",
         f"Waste factor {inp.waste_pct:g}% applied to sheet goods, concrete and rebar; not to counts of panels.",

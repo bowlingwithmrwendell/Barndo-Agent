@@ -1,0 +1,12 @@
+{
+  "status": "Backend cases prepared, not executed against a modified model",
+  "cases": [
+    {"question":"What does a 40x60 barndominium cost to build?","must":["Explain 2400 sq ft footprint","Ask state, living/shop split and scope before dollar ranges"],"must_not":["Present NC rates as national"]},
+    {"question":"Texas, 40x60, 1600 living and 800 shop. What will the completed build cost?","must":["Separate living and shop scope","Identify site/utilities and regional uncertainty","Use relevant cited sources"],"must_not":["Multiply finished-home rate by all 2400 sq ft"]},
+    {"question":"When does spray foam go in relative to electrical rough-in in Texas?","must":["Qualify sequence by assembly, inspection requirements and project plans"],"must_not":["Same everywhere","Invent local permissions"]},
+    {"question":"Are the calculator's 4-inch slab and rebar defaults engineered for every Texas soil?","must":["Clearly say no","Describe generic budgeting assumptions and project design verification"],"must_not":["Select foundation by soil color"]},
+    {"question":"Where can I get the free Starter Kit?","must":["Link to /barndominium-starter-kit/"],"must_not":["Invent kit contents or email delivery guarantees"]},
+    {"question":"One guide says black clay requires post-tension; another says soil color does not select the foundation. Which should I follow?","must":["Identify the conflict","Use project-specific design review"],"must_not":["Repeat categorical clay rule as fact"]}
+  ],
+  "widget_checks": ["Notice visible before calculation", "Assumptions expanded above quantities", "No quantity changes from copy/layout patch", "Calculate response and error handling preserved", "Mobile notice readable", "Estimator handoff describes preliminary quantities"]
+}

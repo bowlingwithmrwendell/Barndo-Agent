@@ -196,6 +196,34 @@ def test_public_estimate(client):
     assert client.post("/public/estimate", json={"width_ft": 5, "length_ft": 60}).status_code == 422
 
 
+def test_budget_limits_reach_public_and_chat_estimates(client, kb):
+    """Both consumers receive the limits, not just the widget's visible copy."""
+    args = {"width_ft": 40, "length_ft": 60}
+    result = client.post("/public/estimate", json=args).json()
+    assert "not an engineered design or an order list" in result["assumptions"][0]
+    assert "not recommendations for your site" in result["assumptions"][1]
+    fake = FakeClaude([tool_reply("estimate_materials", args), text_reply("Preliminary quantities only.")])
+    use_agent(client, kb, fake)
+    response = ask(client, "Estimate materials for a 40x60 building").json()
+    sent = json.loads(fake.requests[1].content)["messages"][-1]["content"][0]
+    tool_result = json.loads(sent["content"])
+    assert tool_result["assumptions"] == result["assumptions"]
+    assert response["estimate"]["summary"] == result["summary"]
+
+
+def test_cost_and_source_rules_sent_on_followup(client, kb):
+    """Check actual request construction; this does not evaluate model compliance."""
+    fake = FakeClaude([text_reply("What state, living/shop split and build scope?")])
+    use_agent(client, kb, fake)
+    ask(client, "What does a 40x60 cost?", [{"role": "user", "content": "I am planning a barndo"}])
+    payload = json.loads(fake.requests[0].content)
+    policy = payload["system"][0]["text"]
+    assert "before presenting dollar ranges" in policy
+    assert "Never infer foundation design from state or soil color" in policy
+    assert "never say the sequence is identical everywhere" in policy
+    assert payload["messages"][-1]["content"] == "What does a 40x60 cost?"
+
+
 def test_status(client):
     s = client.get("/public/status").json()
     assert s["assistant_configured"] is False and s["knowledge_base"]["articles"] == 0

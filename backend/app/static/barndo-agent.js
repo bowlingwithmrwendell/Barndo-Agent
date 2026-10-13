@@ -234,7 +234,8 @@
   ]);
   var estOut = el("div", { class: "res", "aria-live": "polite" });
   var viewEst = el("div", { class: "view", role: "tabpanel", hidden: "" }, [el("div", { class: "est" }, [
-    el("p", { style: "margin:0 0 12px;color:#3d4f63", text: "Quantities for a rectangular, gable-roof metal building. Take them to your supplier to price." }),
+    el("p", { style: "margin:0 0 12px;color:#3d4f63", text: "Preliminary budget estimate for a rectangular, gable-roof metal building. Quantities use generic assumptions; they are not an engineered design or an order list." }),
+    el("p", { class: "fine", text: "Confirm foundation dimensions and reinforcement with your project design professional. Confirm insulation thickness and assembly with your designer and installer. Have your supplier verify quantities against approved plans before ordering." }),
     estForm, estOut])]);
 
   panel.appendChild(header); panel.appendChild(viewAsk); panel.appendChild(viewEst);
@@ -330,6 +331,7 @@
 
   function showEstimate(inp, r) {
     estOut.innerHTML = "";
+    estOut.appendChild(el("p", { class: "msg bot", text: "Budget quantities only. Slab, beam, rebar and foam values below are example assumptions, not specifications for your site. Review the assumptions before comparing quotes." }));
     var s = r.summary;
     estOut.appendChild(elevation(inp.width_ft, inp.eave_height_ft, inp.roof_pitch));
     estOut.appendChild(el("div", { class: "kpis" }, [
@@ -347,16 +349,16 @@
       });
       estOut.appendChild(sec);
     });
-    var d = el("details", null, [el("summary", { text: "How these were calculated" })]);
+    var d = el("details", { open: "" }, [el("summary", { text: "Assumptions used — review before using quantities" })]);
     var ul = el("ul"); r.assumptions.forEach(function (a) { ul.appendChild(el("li", { text: a })); });
-    d.appendChild(ul); estOut.appendChild(d);
+    d.appendChild(ul); estOut.insertBefore(d, estOut.firstChild.nextSibling);
     estOut.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
     estOut.appendChild(el("p", { class: "ask-link" }, [
       el("button", { type: "button", text: "Ask the assistant about this estimate", onclick: function () {
         setTab("ask");
         ask("I ran the material estimator for a " + inp.width_ft + "x" + inp.length_ft + " barndo with " + inp.eave_height_ft +
           " ft eaves at " + inp.roof_pitch + "/12" + (inp.living_sqft ? ", " + inp.living_sqft + " sq ft living" : "") +
-          ". What should I watch out for when ordering these materials?");
+          ". Please explain the estimate assumptions and what my designer and supplier must verify before I use these quantities. These are preliminary budget quantities, not approved design specifications.");
       } })
     ]));
   }
