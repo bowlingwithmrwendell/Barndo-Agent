@@ -78,7 +78,7 @@ def test_answer_is_grounded_and_cites_sources(client, kb):
     assert payload["model"] == "claude-sonnet-5-5"
     assert payload["system"][0]["cache_control"] == {"type": "ephemeral"}
     assert "spray foam" in payload["system"][1]["text"].lower()  # retrieved excerpt injected
-    assert {t["name"] for t in payload["tools"]} == {"search_guides", "estimate_materials"}
+    assert {t["name"] for t in payload["tools"]} == {"search_guides", "estimate_materials", "find_builders"}
 
 
 def test_estimator_tool_round_trip(client, kb):
@@ -246,3 +246,29 @@ def test_widget_is_served(client):
 
 def test_kb_refresh_requires_admin(client):
     assert client.post("/admin/kb/refresh", headers=h("manager")).status_code == 403
+
+
+def test_builder_tool_returns_public_matches(client, kb, monkeypatch):
+    monkeypatch.setattr(
+        "app.routers.directory.public_companies",
+        lambda: [
+            {
+                "name": "Example",
+                "source": "https://example.com",
+                "areas": ["Paris"],
+                "work_types": ["complete"],
+                "availability": "unknown",
+            }
+        ],
+    )
+    fake = FakeClaude(
+        [
+            tool_reply("find_builders", {"area": "Paris", "work_type": "complete"}),
+            text_reply("Contact [Example](https://example.com); confirm availability."),
+        ]
+    )
+    use_agent(client, kb, fake)
+    response = ask(client, "Builders in Paris for a complete home?")
+    assert response.status_code == 200
+    result = json.loads(fake.requests[1].content)["messages"][-1]["content"][0]
+    assert json.loads(result["content"])["companies"][0]["availability"] == "unknown"

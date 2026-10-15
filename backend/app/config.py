@@ -15,6 +15,10 @@ class Settings(BaseSettings):
     app_name: str = "Killette Innovations - Barndo Build Agent API"
     environment: str = "development"  # development | test | production
 
+    # Separate managed builder directory; never use a secret/service-role key here.
+    supabase_url: str = ""
+    supabase_publishable_key: str = ""
+
     # Database. SQLite by default; any SQLAlchemy URL works (e.g. postgresql+psycopg://...).
     database_url: str = "sqlite:///./data/barndo.db"
 

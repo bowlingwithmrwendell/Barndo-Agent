@@ -15,7 +15,7 @@ from app import __version__
 from app.agent.kb import get_kb, sync
 from app.config import get_settings
 from app.db import init_db
-from app.routers import budget, feedback, projects, public
+from app.routers import budget, directory, feedback, projects, public
 
 log = logging.getLogger(__name__)
 STATIC_DIR = Path(__file__).parent / "static"
@@ -70,6 +70,7 @@ def create_app() -> FastAPI:
     app.include_router(budget.router)
     app.include_router(feedback.router)
     app.include_router(public.router)
+    app.include_router(directory.router)
     app.mount("/widget", StaticFiles(directory=STATIC_DIR, html=True), name="widget")
     return app
 

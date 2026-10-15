@@ -49,6 +49,18 @@ Aim for at most 180 words initially unless details are requested. One relevant n
 
 TOOLS = [
     {
+        "name": "find_builders",
+        "description": "Find published profiles by exact documented town/county and work type. Ask for missing area and scope.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "area": {"type": "string"},
+                "work_type": {"type": "string", "enum": ["complete", "shell", "trade"]},
+            },
+            "required": ["area", "work_type"],
+        },
+    },
+    {
         "name": "search_guides",
         "description": "Search BarndoBible's guides (costs, plans, kits, land, rough-in, insulation, finish-out). "
         "Returns matching excerpts with their URLs. Use when the excerpts already provided don't answer the question.",
@@ -173,6 +185,31 @@ class Agent:
                         found = self.kb.search(str(block["input"].get("query", "")), k=4)
                         seen.update({c.url: c.title for c in found})
                         out = _excerpts(found) or "No matching guides."
+                    elif block["name"] == "find_builders":
+                        from fastapi import HTTPException
+
+                        from app.routers.directory import public_companies
+
+                        area = str(block["input"].get("area", "")).strip().casefold()
+                        work = block["input"].get("work_type")
+                        if not area or work not in {"complete", "shell", "trade"}:
+                            raise ValueError("Provide town/county and complete, shell or trade scope")
+                        try:
+                            matches = [
+                                c
+                                for c in public_companies()
+                                if area in [a.casefold() for a in c["areas"]] and work in c["work_types"]
+                            ][:3]
+                            seen.update({c["source"]: c["name"] for c in matches})
+                            out = json.dumps(
+                                {
+                                    "companies": matches,
+                                    "notice": "Website claims; not independently vetted. Confirm property and availability. "
+                                    "Empty results mean no documented match, not no local builders.",
+                                }
+                            )
+                        except HTTPException:
+                            out = "Directory unavailable. Do not invent companies or claim none were found."
                     elif block["name"] == "estimate_materials":
                         est = run_estimate(block["input"])
                         out = json.dumps(est)
