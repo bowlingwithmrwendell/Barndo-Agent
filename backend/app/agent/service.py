@@ -191,6 +191,9 @@ class Agent:
                         from app.routers.directory import public_companies
 
                         area = str(block["input"].get("area", "")).strip().casefold()
+                        for suffix in (", texas", ", tx", " texas", " tx"):
+                            if area.endswith(suffix):
+                                area = area[: -len(suffix)].strip()
                         work = block["input"].get("work_type")
                         if not area or work not in {"complete", "shell", "trade"}:
                             raise ValueError("Provide town/county and complete, shell or trade scope")

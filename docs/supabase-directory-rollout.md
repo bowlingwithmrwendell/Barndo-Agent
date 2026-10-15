@@ -26,3 +26,9 @@ Project `frylsynpbyprunbqxxro`, organization Killettes Mule LLC, East US/North V
 User selected Free plan with separate exports. Free plan dashboard explicitly reports no project backups. Initial public export: workspace `shared/outputs/builder-directory-export-2026-10-15.json`. Restored that export to a temporary table in Supabase: 5 records, 0 differences; transaction rolled back. This tests the public record export, not full-project disaster recovery or private research backups. `scripts/export_builder_directory.py` supports repeat public exports; keep copies off the app host after directory updates. No recurring backup automation has been created. Before storing private notes or unpublished research, add a privileged schema/data export and restore procedure; publishable-key exports cannot preserve those records.
 
 Railway connection variables configured using restricted publishable key; no privileged Supabase key used. Agent tool and website switch still require deployment verification.
+
+## Published integration
+
+Backend commit `8609b3a5c95db7e058ddd9a730a8f26128ac0b6e` pushed to main and deployed. Live `/public/builders` returned five profiles with no private research fields. WordPress page 807 now fetches this endpoint instead of embedding company records. Live browser verified Paris complete-build results (3) and Texarkana shell results (1, Crank & Son), with unconfirmed/unknown labels. All 59 backend tests pass; lint and formatting pass. Production screenshot: workspace `shared/outputs/supabase-finder-live-2026-10-15.png`.
+
+Public lookup currently caps its result set at 500 companies; add server-side geographic queries/pagination before exceeding that directory size. Editing currently uses Supabase Table Editor; no custom admin interface was added. Export process is manual, not scheduled, and the tested backup covers published directory records only. Original project/client database migration was not performed.

@@ -75,3 +75,7 @@ Source files (relative to Barndo-Agent):
 - Earlier release evidence: `../shared/outputs/barndo-agent-release-2026-10-13.md` relative to the repository parent (workspace `shared/outputs`).
 
 Verification commands: `railway status --json`; `railway variables --json` filtered in-process to storage configuration only (no secret output); GET `/public/status`. Recheck production settings before implementation: this document is a dated snapshot. Never copy raw environment dumps, tokens, encryption keys or customer records into documentation.
+
+## October 15 directory implementation update
+
+Supabase project `frylsynpbyprunbqxxro` now holds five directory company records in `public.builder_companies`; private research schema/table created separately with no anonymous access. Anonymous role visibility/write restrictions tested. Railway connection configured with restricted publishable key. This supersedes the earlier no-builder-table finding for the new directory only; original project/client SQLite persistence remains unchanged. See [rollout status](supabase-directory-rollout.md) for deployment, public export restore test and remaining private-backup limitations.
